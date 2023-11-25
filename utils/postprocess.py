@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torchvision
 import cv2
-from preprocess.info import *
+from utils.info import *
 
 
 def postproc(prediction, conf_thres, iou_thres):
