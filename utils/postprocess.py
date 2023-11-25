@@ -168,9 +168,13 @@ def draw_bbox(img, bbox, preproc_param):
         score = box[4]
         class_id = int(box[5])
 
-        color = COLORS_10[class_id % len(COLORS_10)]
-        label = f"{CLASSES[class_id]} ({score:.2f})"
-
-        img = plot_one_box([x0, y0, x1, y1], img, color, label)
+        if class_id == 0:
+            # color = COLORS_10[class_id % len(COLORS_10)]
+            # label = f"{CLASSES[class_id]} ({score:.2f})"
+            #
+            # img = plot_one_box([x0, y0, x1, y1], img, color, label)
+            # import pdb; pdb.set_trace()
+            blur = cv2.blur(img[y0:y1, x0:x1], (20, 20))
+            img[y0:y1, x0:x1] = blur
 
     return img
