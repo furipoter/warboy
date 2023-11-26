@@ -1,8 +1,7 @@
-import numpy as np
 import torch
-import torchvision
 import cv2
 from utils.info import *
+from torchvision import ops
 
 
 def postproc(prediction, conf_thres, iou_thres):
@@ -81,7 +80,7 @@ def non_max_suppression(
         classes = x[:, 5:6] * (0 if agnostic else max_wh)  # classes
         boxes, scores = x[:, :4] + classes, x[:, 4]  # boxes (offset by class), scores
 
-        i = torchvision.ops.nms(
+        i = ops.nms(
             torch.from_numpy(boxes), torch.from_numpy(scores), iou_thres
         ).numpy()
         if i.shape[0] > max_det:
@@ -168,13 +167,15 @@ def draw_bbox(img, bbox, preproc_param):
         score = box[4]
         class_id = int(box[5])
 
-        if class_id == 0:
-            # color = COLORS_10[class_id % len(COLORS_10)]
-            # label = f"{CLASSES[class_id]} ({score:.2f})"
-            #
-            # img = plot_one_box([x0, y0, x1, y1], img, color, label)
-            # import pdb; pdb.set_trace()
-            blur = cv2.blur(img[y0:y1, x0:x1], (20, 20))
-            img[y0:y1, x0:x1] = blur
-
+        try:
+            if class_id == 0:
+                # color = COLORS_10[class_id % len(COLORS_10)]
+                # label = f"{CLASSES[class_id]} ({score:.2f})"
+                #
+                # img = plot_one_box([x0, y0, x1, y1], img, color, label)
+                # import pdb; pdb.set_trace()
+                blur = cv2.blur(img[y0:y1, x0:x1], (10, 10))
+                img[y0:y1, x0:x1] = blur
+        except:
+            pass
     return img
